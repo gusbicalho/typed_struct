@@ -108,7 +108,9 @@ defmodule TypedStruct do
       unquote(block)
 
       @enforce_keys @ts_enforce_keys
-      defstruct @ts_fields
+      defstruct if System.version() |> Version.match?("~> 1.14"),
+                  do: Enum.reverse(@ts_fields),
+                  else: @ts_fields
 
       TypedStruct.__type__(@ts_types, unquote(opts))
     end
